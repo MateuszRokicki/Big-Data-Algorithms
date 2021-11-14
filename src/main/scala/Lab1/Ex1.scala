@@ -12,7 +12,7 @@ class Text() {
   var sorted_words = Map[String,Int]().toSeq
   val stopwords = List("ourselves", "hers", "between", "yourself", "but", "again", "there", "about", "once", "during", "out", "very", "having", "with", "they", "own", "an", "be", "some", "for", "do", "its", "yours", "such", "into", "of", "most", "itself", "other", "off", "is", "s", "am", "or", "who", "as", "from", "him", "each", "the", "themselves", "until", "below", "are", "we", "these", "your", "his", "through", "don", "nor", "me", "were", "her", "more", "himself", "this", "down", "should", "our", "their", "while", "above", "both", "up", "to", "ours", "had", "she", "all", "no", "when", "at", "any", "before", "them", "same", "and", "been", "have", "in", "will", "on", "does", "yourselves", "then", "that", "because", "what", "over", "why", "so", "can", "did", "not", "now", "under", "he", "you", "herself", "has", "just", "where", "too", "only", "myself", "which", "those", "i", "after", "few", "whom", "t", "being", "if", "theirs", "my", "against", "a", "by", "doing", "it", "how", "further", "was", "here", "than")
   var sumwords = 0
-  var mostfrequentwords = Map[String,Int]
+  var mostfrequentwords = Map[String,Int]().toSeq
   def CountWords(input_string:String): Unit = {
     var lines = Source.fromFile(input_string).getLines().mkString(" ").toLowerCase()
     var words_f = lines.split("\\W+" ).filterNot(stopwords.contains(_))
@@ -55,15 +55,19 @@ object Ex1 {
     val n = 10
     //load books
     var books = List[Text]()
-    var books_tfidf = Map[String, Map[String,Int]]()
+    var all_books_tfidf = Map[String, Map[String, Double]]()
     var all_words = Map[String, Int]()
-    var books_path = List("D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\Lab_0\\orwell1984.txt",
-      "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\Lab_0\\orwell1984.txt",
-      "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\Lab_0\\orwell1984.txt",
-      "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\Lab_0\\orwell1984.txt",
-      "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\Lab_0\\orwell1984.txt",
-      "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\Lab_0\\orwell1984.txt",
-      "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\Lab_0\\orwell1984.txt")
+    var books_path = List("D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\alicesadventuresinwonderland.txt",
+      "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\dracula.txt",
+      "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\frankenstein.txt",
+      "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\littlewomen.txt",
+      "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\mobydick.txt",
+      "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\orwell1984.txt",
+      "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\peterpan.txt",
+      "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\theadventuresofsherlockholmes.txt",
+      "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\thegreatgatsby.txt",
+      "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\theodyssey.txt",
+      "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\thescarletletter.txt")
 
     for(path <- books_path) {
       //Create new object Text for each book(path)
@@ -101,34 +105,23 @@ object Ex1 {
 
     //calculate TF.IDF for n words
     for(book <- books){
-      //for(word <- book.mostfrequentwords){
-      //  print(word)
-      //}
+      var book_tfidf = Map[String, Double]()
+      for(word <- book.word_count){
+        var tf = word._2/book.sumwords
+        var cnt = 0
+        for(book <- books){
+          if(book.word_count.contains(word._1)){
+            cnt += 1
+          }
+        }
+        var idf = Math.log(books.size/cnt)
+        book_tfidf(word._1) = tf*idf
+      }
+      all_books_tfidf(book.title) = book_tfidf
     }
 
 
 
 
-
-
-    var exit: Boolean = true
-    var words = new Text()
-    while(exit){
-      try{
-        val input = io.StdIn.readLine("Enter file location: ")
-        if(input == "exit"){
-          val file_path = io.StdIn.readLine("Enter file path: ")
-          val file_title = io.StdIn.readLine("Enter file name: ")
-          exit = false
-        }
-        else{
-          words.CountWords(input)
-          //words.Word_Cloud()
-        }
-      }
-      catch{
-        case e: FileNotFoundException => println("Wrong path")
-      }
-    }
   }
 }
