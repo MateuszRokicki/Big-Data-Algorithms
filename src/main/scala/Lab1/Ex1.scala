@@ -25,28 +25,19 @@ class Text() {
     }
     //sorted_words = word_count.toSeq.sortWith(_._2 > _._2)
   }
-  def AllWords() : Map[String, Int] = {
-    word_count
-  }
 
   def SortWords() : Unit = {
     sorted_words = word_count.toSeq.sortWith(_._2 > _._2)
   }
   def Word_Cloud(n:Int): Unit = {
     mostfrequentwords = sorted_words.take(n)
-    println(mostfrequentwords)
+    println(title, mostfrequentwords)
   }
 
   def CountAllWords() : Unit = {
     sumwords = word_count.foldLeft(0)(_+_._2)
   }
 
-  def MostFreq(n:Int) : Unit = {
-    mostfrequentwords
-  }
-  def TFIDF() :Unit = {
-
-  }
 
 }
 
@@ -69,13 +60,24 @@ object Ex1 {
       "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\theodyssey.txt",
       "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\thescarletletter.txt")
 
-    for(path <- books_path) {
+    var books_path2 = List("D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\Mining of Massive Datasets\\chapter2.txt",
+      "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\Mining of Massive Datasets\\chapter3.txt",
+      "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\Mining of Massive Datasets\\chapter4.txt",
+      "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\Mining of Massive Datasets\\chapter5.txt",
+      "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\Mining of Massive Datasets\\chapter6.txt",
+      "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\Mining of Massive Datasets\\chapter7.txt",
+      "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\Mining of Massive Datasets\\chapter8.txt",
+      "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\Mining of Massive Datasets\\chapter9.txt",
+      "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\Mining of Massive Datasets\\chapter10.txt",
+      "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\Mining of Massive Datasets\\chapter11.txt")
+
+    for(path <- books_path2) {
       //Create new object Text for each book(path)
       var f = new File(path)
       var book = new Text()
       book.CountWords(path)
       book.SortWords()
-      book.title = f.getName()
+      book.title = f.getName().split('.')(0)
       book.CountAllWords()
       //Add every book to list of books
       books :+= book
@@ -107,21 +109,24 @@ object Ex1 {
     for(book <- books){
       var book_tfidf = Map[String, Double]()
       for(word <- book.word_count){
-        var tf = word._2/book.sumwords
+        var tf = word._2.toFloat/book.sumwords.toFloat
         var cnt = 0
         for(book <- books){
           if(book.word_count.contains(word._1)){
             cnt += 1
           }
         }
-        var idf = Math.log(books.size/cnt)
+        var idf = Math.log(books.size.toFloat/cnt.toFloat)
         book_tfidf(word._1) = tf*idf
       }
       all_books_tfidf(book.title) = book_tfidf
     }
-
-
-
-
+    for(book <-all_books_tfidf){
+      println(book._1)
+      var sortedwords = book._2.toSeq.sortWith(_._2 > _._2)
+      for(words <- sortedwords.take(n)){
+        println(words)
+      }
+    }
   }
 }
