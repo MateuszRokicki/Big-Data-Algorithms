@@ -11,9 +11,9 @@ object Ex2 {
     var books_shingles = Map[String, Set[String]]()
     var k_jaccard = Map[Int, Map[String,Double]]()
     var book_words = Map[String, Array[String]]()
-    var books_path = List("D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\dracula.txt",
-      "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\frankenstein.txt",
-      "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\mobydick.txt",
+    var books_path = List("D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\dracula1.txt",
+      "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\dracula2.txt",
+      "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\dracula3.txt",
       "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\Mining of Massive Datasets\\chapter2.txt",
       "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\Mining of Massive Datasets\\chapter3.txt",
       "D:\\Studia\\Magisterskie\\II semestr\\Big Data Algorithms\\Laboratorium\\Lab0_1\\files\\Mining of Massive Datasets\\chapter4.txt")
@@ -45,7 +45,7 @@ object Ex2 {
         {
           var jac = (book1._1 + ' ' + book2._1 -> Jaccard_Similarity(book1._2, book2._2))
           jaccard += jac
-          pw.write(jac.toString+'\n')
+          pw.write(jac.toString()+'\n')
           println(jac)
         }
       }

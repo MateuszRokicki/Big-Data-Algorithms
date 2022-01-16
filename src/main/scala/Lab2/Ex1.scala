@@ -25,7 +25,6 @@ object Ex1 {
     var vi : Map[Int, ListBuffer[Int]] = Map()
     var vo : Map[Int, ListBuffer[Int]] = Map()
     var lines = Source.fromFile(input).getLines()
-    //var i = 0
     for (line <- lines) {
       val tup = line.split("\t") match { case Array(x1, x2) => (x1.toInt, x2.toInt) }
       if(vo.contains(tup._1)){
@@ -40,7 +39,6 @@ object Ex1 {
       else{
         vi += (tup._2 -> ListBuffer(tup._1))
       }
-      //i += 1
     }
     return (vi, vo)
   }
